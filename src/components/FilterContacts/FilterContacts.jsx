@@ -1,7 +1,15 @@
+import { useSelector } from 'react-redux';
 import { Box } from 'Box';
+import { getFilterValue } from 'components/redux/filterSlice';
 import { PropTypes } from 'prop-types';
+import { useEffect, useRef } from 'react';
 
 export const FilterContacts = ({ handleFilterContacts }) => {
+  const filterValue = useSelector(getFilterValue);
+  const inputFilterRef = useRef();
+  useEffect(() => {
+    inputFilterRef.current.value = filterValue;
+  });
   return (
     <Box
       display="flex"
@@ -12,7 +20,12 @@ export const FilterContacts = ({ handleFilterContacts }) => {
       pb={5}
     >
       <label htmlFor="filter">Filter</label>
-      <input type="text" name="filterName" onChange={handleFilterContacts} />
+      <input
+        type="text"
+        ref={inputFilterRef}
+        name="filterName"
+        onChange={handleFilterContacts}
+      />
     </Box>
   );
 };
