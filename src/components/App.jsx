@@ -12,7 +12,6 @@ import { ContactList } from 'components/ContactList/ContactList';
 export const App = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(getItems);
-  console.log(contacts);
   const filter = useSelector(getFilterValue);
 
   const handleSubmit = ({ name, number }, { resetForm }) => {
