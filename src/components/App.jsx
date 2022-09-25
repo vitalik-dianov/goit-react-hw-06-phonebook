@@ -2,8 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box } from 'Box';
 
-import { addItem, deleteItem } from './redux/itemsSlice';
-import { setFilter } from './redux/filterSlice';
+import { addItem, deleteItem, getItems } from './redux/itemsSlice';
+import { setFilterValue, getFilterValue } from './redux/filterSlice';
 
 import { AddContactForm } from 'components/AddContactForm/AddContactForm';
 import { FilterContacts } from 'components/FilterContacts/FilterContacts';
@@ -11,8 +11,9 @@ import { ContactList } from 'components/ContactList/ContactList';
 
 export const App = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.items);
-  const filter = useSelector(state => state.filter);
+  const contacts = useSelector(getItems);
+  console.log(contacts);
+  const filter = useSelector(getFilterValue);
 
   const handleSubmit = ({ name, number }, { resetForm }) => {
     if (
@@ -29,7 +30,7 @@ export const App = () => {
     resetForm();
   };
   const handleFilterContacts = e => {
-    dispatch(setFilter(e.target.value));
+    dispatch(setFilterValue(e.target.value));
   };
   const handleDeleteContact = contactId => {
     dispatch(deleteItem(contactId));
