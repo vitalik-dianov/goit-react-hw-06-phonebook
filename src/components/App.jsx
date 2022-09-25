@@ -1,59 +1,38 @@
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Box } from 'Box';
+
+import { addItem, deleteItem } from './redux/itemsSlice';
+import { setFilter } from './redux/filterSlice';
+
 import { AddContactForm } from 'components/AddContactForm/AddContactForm';
 import { FilterContacts } from 'components/FilterContacts/FilterContacts';
 import { ContactList } from 'components/ContactList/ContactList';
-import { nanoid } from 'nanoid';
-import { Box } from 'Box';
-import React, { useEffect, useState } from 'react';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    return (
-      JSON.parse(window.localStorage.getItem('contacts')) ?? [
-        { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-        { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-        { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-        { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-      ]
-    );
-  });
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.items);
+  const filter = useSelector(state => state.filter);
 
-  const [filter, setFilter] = useState('');
-
-  useEffect(() => {
-    const parsedLS = JSON.parse(window.localStorage.getItem('contacts'));
-
-    if (parsedLS) {
-      setContacts(parsedLS);
-    }
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
-
-  const handleSubmit = (values, { resetForm }) => {
-    const arr = contacts.map(el => {
-      return el;
-    });
+  const handleSubmit = ({ name, number }, { resetForm }) => {
     if (
-      arr.find(el => {
-        return el.name.toLowerCase() === values.name.toLowerCase();
+      contacts.find(el => {
+        return el.name.toLowerCase() === name.toLowerCase();
       })
     ) {
-      alert(`Sorry, but ${values.name} is already in contacts!`);
+      alert(`Sorry, but ${name} is already in contacts!`);
+      return;
     } else {
-      arr.push({ name: values.name, id: nanoid(), number: values.number });
+      dispatch(addItem(name, number));
     }
-
-    setContacts(arr);
 
     resetForm();
   };
   const handleFilterContacts = e => {
-    setFilter(e.target.value);
+    dispatch(setFilter(e.target.value));
   };
   const handleDeleteContact = contactId => {
-    setContacts(state => state.filter(contact => contact.id !== contactId));
+    dispatch(deleteItem(contactId));
   };
 
   return (
