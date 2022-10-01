@@ -24,8 +24,8 @@ const itemsSlice = createSlice({
         return {
           payload: {
             name,
-            id: nanoid(),
             number,
+            id: nanoid(),
           },
         };
       },
